@@ -8,7 +8,7 @@ ARG BIND_VER
 
 RUN dnf install -y openssl-devel wget \
  && dnf groupinstall -y "Development Tools" \
- && dnf install -y --disablerepo=extras --enablerepo=powertools,devel libnghttp2-devel libuv-devel libcap-devel userspace-rcu-devel \
+ && dnf install -y --disablerepo=extras --enablerepo=powertools,devel libnghttp2-devel libuv-devel libcap-devel userspace-rcu-devel libidn2-devel \
  && rm -rf /var/cache/dnf/* \
  && dnf clean all
 
@@ -17,7 +17,7 @@ RUN tar xf bind-${BIND_VER}.tar.xz
 
 WORKDIR bind-${BIND_VER}
 RUN ./configure --prefix=/usr/local/bind-${BIND_VER} \
- --disable-geoip --enable-doh --disable-dnstap \
+ --disable-geoip --enable-doh --disable-dnstap --with-libidn2 \
  && make -j12 && make install
 
 RUN cd /usr/local/bind-${BIND_VER} \
@@ -40,7 +40,7 @@ COPY --from=builder /usr/local/bind-${BIND_VER}/bin/delv /usr/local/bind-${BIND_
 # update all packages
 RUN microdnf update -y
 
-RUN microdnf install -y --disablerepo=extras --enablerepo=powertools openssl libnghttp2 libuv libcap userspace-rcu \
+RUN microdnf install -y --disablerepo=extras --enablerepo=powertools openssl libnghttp2 libuv libcap userspace-rcu libidn2 \
  && rm -rf /var/cache/yum/* \
  && microdnf clean all
 
