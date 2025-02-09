@@ -7,7 +7,7 @@ FROM rockylinux/rockylinux:${ROCKY_REL} AS builder
 ARG ROCKY_REL
 ARG BIND_VER
 
-RUN --mount=type=cache,target=/var/cache/yum \
+RUN --mount=type=cache,sharing=locked,target=/var/cache/yum \
  dnf install -y openssl-devel wget \
  && dnf groupinstall -y "Development Tools" \
  && dnf install -y --disablerepo=extras --enablerepo=crb,devel libnghttp2-devel libuv-devel libcap-devel userspace-rcu-devel libidn2-devel
@@ -36,7 +36,7 @@ COPY --from=builder /usr/local/bind-${BIND_VER}/bin/dig /usr/local/bind-${BIND_V
 COPY --from=builder /usr/local/bind-${BIND_VER}/bin/delv /usr/local/bind-${BIND_VER}/bin/
 
 # update all packages
-RUN --mount=type=cache,target=/var/cache/yum \
+RUN --mount=type=cache,sharing=locked,target=/var/cache/yum \
  microdnf install -y --disablerepo=extras --enablerepo=crb openssl libnghttp2 libuv libcap userspace-rcu libidn2
 
 # install in /usr/local/bin
