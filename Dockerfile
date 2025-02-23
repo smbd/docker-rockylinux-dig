@@ -1,6 +1,6 @@
 ##### build #####
 ARG ROCKY_REL=9.3
-ARG BIND_VER=9.20.5
+ARG BIND_VER=9.20.6
 
 FROM rockylinux/rockylinux:${ROCKY_REL} AS builder
 
